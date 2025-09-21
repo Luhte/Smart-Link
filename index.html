@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart-Link</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 50px 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .container {
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+        h1 { font-size: 2.5rem; margin-bottom: 20px; }
+        p { font-size: 1.2rem; margin-bottom: 30px; }
+        .btn {
+            display: inline-block;
+            background: white;
+            color: #667eea;
+            padding: 15px 30px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.2s ease;
+        }
+        .btn:hover { transform: translateY(-2px); }
+        .note {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎵 Smart Link</h1>
+        <p>Now running on GitHub Pages with zero server requirements!</p>
+        
+        <a href="docs/" class="btn">🚀 Create Smart Links</a>
+        
+        <div class="note">
+            <strong>✨ What's New:</strong><br>
+            • 100% client-side - no server required<br>
+            • Free hosting on GitHub Pages<br>
+            • Same great features, zero costs<br>
+            • Your data stays in your browser
+        </div>
+    </div>
+
+    <script>
+        // Auto-redirect to docs if this is deployed on GitHub Pages
+        if (window.location.hostname.includes('github.io')) {
+            setTimeout(() => {
+                window.location.href = 'docs/';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

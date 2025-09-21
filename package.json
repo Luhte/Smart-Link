@@ -1,0 +1,17 @@
+{
+  "name": "feature-fm-alternative",
+  "version": "1.0.0",
+  "description": "A smart link service for musicians - Feature.fm alternative",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["music", "smart-links", "streaming", "feature.fm", "alternative"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.0",
+    "uuid": "^9.0.0"
+  }
+}
