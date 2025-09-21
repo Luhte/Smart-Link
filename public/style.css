@@ -1,0 +1,398 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header */
+header {
+    text-align: center;
+    margin-bottom: 40px;
+    color: white;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+header p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+/* Main content */
+.main-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Create link section */
+.create-link-section, .links-section {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.create-link-section h2, .links-section h2 {
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 1.5rem;
+}
+
+/* Form styles */
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #555;
+}
+
+input[type="text"], input[type="url"], select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus, input[type="url"]:focus, select:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+/* Platform inputs */
+.platform-input {
+    display: grid;
+    grid-template-columns: 150px 1fr auto;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.remove-platform {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 12px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.remove-platform:hover {
+    background: #c0392b;
+}
+
+#addPlatform {
+    background: #27ae60;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+#addPlatform:hover {
+    background: #229954;
+}
+
+.create-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-size: 18px;
+    cursor: pointer;
+    width: 100%;
+    transition: transform 0.2s ease;
+}
+
+.create-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* Import section */
+.import-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border-left: 4px solid #28a745;
+}
+
+.import-section h3 {
+    color: #28a745;
+    margin-bottom: 10px;
+    font-size: 1.3rem;
+}
+
+.import-section p {
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.import-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.import-input {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid #28a745;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.import-input:focus {
+    outline: none;
+    border-color: #1e7e34;
+}
+
+.import-btn {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;
+}
+
+.import-btn:hover {
+    background: #1e7e34;
+}
+
+.import-btn:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+}
+
+.section-divider {
+    margin: 20px 0;
+    border: none;
+    height: 1px;
+    background: #dee2e6;
+}
+
+.import-result {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.import-result.error {
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+
+.import-result.loading {
+    background: #cce7ff;
+    border: 1px solid #99d3ff;
+    color: #004085;
+}
+
+@media (max-width: 480px) {
+    .import-form {
+        flex-direction: column;
+    }
+}
+
+/* Result section */
+.result {
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.result.error {
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Links list */
+.links-list {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.link-item {
+    background: #f8f9fa;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.link-item h3 {
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.link-item p {
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.link-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.click-count {
+    background: #667eea;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.link-url {
+    font-family: 'Courier New', monospace;
+    background: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    word-break: break-all;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.link-url:hover {
+    background: #e9ecef;
+}
+
+/* Smart link landing page styles */
+.music-card {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    text-align: center;
+    max-width: 500px;
+    margin: 50px auto;
+}
+
+.music-card h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.music-card h2 {
+    font-size: 1.3rem;
+    color: #666;
+    margin-bottom: 20px;
+    font-weight: 400;
+}
+
+.music-card p {
+    color: #888;
+    margin-bottom: 30px;
+}
+
+.platforms {
+    display: grid;
+    gap: 15px;
+}
+
+.platform-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.platform-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.platform-icon {
+    font-size: 1.2rem;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+    
+    header h1 {
+        font-size: 2rem;
+    }
+    
+    .platform-input {
+        grid-template-columns: 1fr;
+        gap: 5px;
+    }
+    
+    .music-card {
+        padding: 20px;
+        margin: 20px auto;
+    }
+}
