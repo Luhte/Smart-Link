@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Link - Create Smart Music Links</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎵 Smart Link</h1>
+            <p>Create smart links for your music that work across all platforms</p>
+        </header>
+
+        <div class="main-content">
+            <div class="create-link-section">
+                <h2>Create New Smart Link</h2>
+                
+                <!-- Feature.fm Import Section -->
+                <div class="import-section">
+                    <h3>📥 Import from Feature.fm</h3>
+                    <p>Already have a Feature.fm link? Import it to migrate your smart link!</p>
+                    <div class="import-form">
+                        <input type="url" id="importUrl" placeholder="Paste your ffm.to or Feature.fm link here" class="import-input">
+                        <button type="button" id="importBtn" class="import-btn">Import Link</button>
+                    </div>
+                    <div id="importResult" class="hidden"></div>
+                    <hr class="section-divider">
+                </div>
+                
+                <form id="linkForm">
+                    <div class="form-group">
+                        <label for="title">Song/Album Title:</label>
+                        <input type="text" id="title" name="title" required placeholder="Enter song or album title">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="artist">Artist Name:</label>
+                        <input type="text" id="artist" name="artist" required placeholder="Enter artist name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Streaming Platforms:</label>
+                        <div id="platforms">
+                            <div class="platform-input">
+                                <select name="platform">
+                                    <option value="Spotify">Spotify</option>
+                                    <option value="Apple Music">Apple Music</option>
+                                    <option value="YouTube Music">YouTube Music</option>
+                                    <option value="Amazon Music">Amazon Music</option>
+                                    <option value="Deezer">Deezer</option>
+                                    <option value="Tidal">Tidal</option>
+                                    <option value="SoundCloud">SoundCloud</option>
+                                    <option value="Bandcamp">Bandcamp</option>
+                                    <option value="iTunes">iTunes</option>
+                                </select>
+                                <input type="url" name="url" placeholder="Platform URL" required>
+                                <button type="button" class="remove-platform">Remove</button>
+                            </div>
+                        </div>
+                        <button type="button" id="addPlatform">+ Add Platform</button>
+                    </div>
+                    
+                    <button type="submit" class="create-btn">Create Smart Link</button>
+                </form>
+                
+                <div id="result" class="result hidden"></div>
+            </div>
+
+            <div class="links-section">
+                <h2>Your Smart Links</h2>
+                <div id="linksList" class="links-list">
+                    <p>Loading...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
