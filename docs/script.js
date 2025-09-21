@@ -144,32 +144,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const title = document.getElementById('title').value;
         const artist = document.getElementById('artist').value;
         
-        // Collect platforms
-        const platformInputs = document.querySelectorAll('.platform-input');
-        const platforms = {};
-        
-        platformInputs.forEach(input => {
-            const platformSelect = input.querySelector('select[name="platform"]');
-            const urlInput = input.querySelector('input[name="url"]');
-            
-            if (platformSelect.value && urlInput.value) {
-                platforms[platformSelect.value] = urlInput.value;
-            }
-        });
-        
-        if (Object.keys(platforms).length === 0) {
-            showResult('Please add at least one platform with a URL.', 'error');
-            return;
-        }
-        
         try {
             // Generate link ID
             const linkId = generateLinkId();
-            
-            // Get existing links from localStorage
-            const links = JSON.parse(localStorage.getItem('smartLinks') || '{}');
-            
-            // Create new link
+            // Create new link object
             const newLink = {
                 id: linkId,
                 title,
@@ -179,16 +157,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 created: new Date().toISOString(),
                 platformClicks: {}
             };
-            
-            // Save to localStorage
-            links[linkId] = newLink;
-            localStorage.setItem('smartLinks', JSON.stringify(links));
-            
             // Generate smart link URL
             const smartLinkUrl = `${getCurrentDomain()}/link.html?id=${linkId}`;
-            
+            // Show result with JSON for copy-paste
             showResult(`
-                <h3>Smart Link Created Successfully!</h3>
+                <h3>Smart Link JSON Generated!</h3>
                 <p><strong>Link ID:</strong> ${linkId}</p>
                 <p><strong>Smart Link URL:</strong></p>
                 <div class="link-url" data-url="${escapeHtml(smartLinkUrl)}">
@@ -196,10 +169,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <p><small>Click the URL above to copy it to clipboard</small></p>
                 <div class="static-note">
-                    <strong>GitHub Pages Compatible:</strong> This link works entirely with client-side code and localStorage. No server required!
+                    <strong>Copy the JSON below and add it to <code>links.json</code> in your repository:</strong>
                 </div>
+                <textarea id="linkJson" style="width:100%;height:120px;">${escapeHtml(JSON.stringify({ [linkId]: newLink }, null, 2))}</textarea>
+                <button id="copyJsonBtn" type="button">Copy JSON</button>
             `, 'success');
-            
             // Add event listener for copy functionality
             const linkUrlDiv = resultDiv.querySelector('.link-url');
             if (linkUrlDiv) {
@@ -210,10 +184,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
             }
-            
+            // Add event listener for copy JSON button
+            const copyJsonBtn = resultDiv.querySelector('#copyJsonBtn');
+            const linkJsonTextarea = resultDiv.querySelector('#linkJson');
+            if (copyJsonBtn && linkJsonTextarea) {
+                copyJsonBtn.addEventListener('click', function() {
+                    linkJsonTextarea.select();
+                    document.execCommand('copy');
+                    copyJsonBtn.textContent = 'Copied!';
+                    setTimeout(() => { copyJsonBtn.textContent = 'Copy JSON'; }, 1500);
+                });
+            }
             linkForm.reset();
-            loadLinks(); // Refresh the links list
-            
         } catch (error) {
             showResult('Error creating link: ' + error.message, 'error');
         }
@@ -254,7 +236,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function loadLinks() {
         try {
             const links = JSON.parse(localStorage.getItem('smartLinks') || '{}');
-            
             if (Object.keys(links).length === 0) {
                 linksListDiv.innerHTML = `
                     <p>No smart links created yet.</p>
@@ -264,41 +245,64 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
                 return;
             }
-            
-            const linksArray = Object.values(links).sort((a, b) => 
-                new Date(b.created) - new Date(a.created)
-            );
-            
-            linksListDiv.innerHTML = linksArray.map(link => `
-                <div class="link-item">
-                    <h3>${escapeHtml(link.title)}</h3>
-                    <p>by ${escapeHtml(link.artist)}</p>
-                    <div class="link-url" data-url="${escapeHtml(getCurrentDomain())}/link.html?id=${escapeHtml(link.id)}">
-                        ${escapeHtml(getCurrentDomain())}/link.html?id=${escapeHtml(link.id)}
-                    </div>
-                    <div class="link-stats">
-                        <span>Platforms: ${Object.keys(link.platforms).map(p => escapeHtml(p)).join(', ')}</span>
-                        <span class="click-count">${escapeHtml(link.clicks || 0)} clicks</span>
-                    </div>
-                    <p><small>Created: ${escapeHtml(new Date(link.created).toLocaleDateString())}</small></p>
-                </div>
-            `).join('');
-            
-            // Add event listeners for copy functionality
-            const linkUrls = linksListDiv.querySelectorAll('.link-url');
-            linkUrls.forEach(linkUrl => {
-                linkUrl.addEventListener('click', function() {
-                    const url = this.dataset.url;
-                    if (url) {
-                        copyToClipboard(url);
-                    }
-                });
-            });
-            
+            renderLinksList(Object.values(links), linksListDiv);
         } catch (error) {
             linksListDiv.innerHTML = '<p>Error loading links.</p>';
             console.error('Error loading links:', error);
         }
+    }
+
+    // Render a list of links to a given container
+    function renderLinksList(linksArray, container) {
+        if (!Array.isArray(linksArray) || linksArray.length === 0) {
+            container.innerHTML = '<p>No links found.</p>';
+            return;
+        }
+        linksArray.sort((a, b) => new Date(b.created) - new Date(a.created));
+        container.innerHTML = linksArray.map(link => `
+            <div class="link-item">
+                <h3>${escapeHtml(link.title)}</h3>
+                <p>by ${escapeHtml(link.artist)}</p>
+                <div class="link-url" data-url="${escapeHtml(getCurrentDomain())}/link.html?id=${escapeHtml(link.id)}">
+                    ${escapeHtml(getCurrentDomain())}/link.html?id=${escapeHtml(link.id)}
+                </div>
+                <div class="link-stats">
+                    <span>Platforms: ${Object.keys(link.platforms).map(p => escapeHtml(p)).join(', ')}</span>
+                    <span class="click-count">${escapeHtml(link.clicks || 0)} clicks</span>
+                </div>
+                <p><small>Created: ${escapeHtml(new Date(link.created).toLocaleDateString())}</small></p>
+            </div>
+        `).join('');
+        // Add event listeners for copy functionality
+        const linkUrls = container.querySelectorAll('.link-url');
+        linkUrls.forEach(linkUrl => {
+            linkUrl.addEventListener('click', function() {
+                const url = this.dataset.url;
+                if (url) {
+                    copyToClipboard(url);
+                }
+            });
+        });
+    }
+
+    // Load links from links.json and display in #linksJsonList
+    const loadLinksJsonBtn = document.getElementById('loadLinksJsonBtn');
+    const linksJsonListDiv = document.getElementById('linksJsonList');
+    if (loadLinksJsonBtn && linksJsonListDiv) {
+        loadLinksJsonBtn.addEventListener('click', function() {
+            fetch('links.json')
+                .then(res => {
+                    if (!res.ok) throw new Error('Could not load links.json');
+                    return res.json();
+                })
+                .then(linksObj => {
+                    const linksArr = Object.values(linksObj);
+                    renderLinksList(linksArr, linksJsonListDiv);
+                })
+                .catch(err => {
+                    linksJsonListDiv.innerHTML = '<p>Error loading links.json: ' + err.message + '</p>';
+                });
+        });
     }
 
     // Delete link function (for future enhancement)

@@ -1,0 +1,25 @@
+{
+  "abc12345": {
+    "id": "abc12345",
+    "title": "Sample Song",
+    "artist": "Sample Artist",
+    "platforms": {
+      "Spotify": "https://open.spotify.com/track/sample",
+      "Apple Music": "https://music.apple.com/album/sample"
+    },
+    "clicks": 0,
+    "created": "2025-09-21T12:34:56.789Z",
+    "platformClicks": {}
+  },
+  "def67890": {
+    "id": "def67890",
+    "title": "Another Example",
+    "artist": "Another Artist",
+    "platforms": {
+      "Spotify": "https://open.spotify.com/track/example"
+    },
+    "clicks": 0,
+    "created": "2025-09-21T13:00:00.000Z",
+    "platformClicks": {}
+  }
+}

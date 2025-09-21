@@ -48,15 +48,25 @@ This version has been completely rewritten to work as a **static website** that'
 
 ## 📱 How It Works (GitHub Pages Edition)
 
-### Data Storage
-- **localStorage**: All smart links are saved in your browser's localStorage
+### Data Storage & Persistence
+- **links.json**: To persist your smart links, copy the generated JSON (shown after creating a link) and paste it into `docs/links.json` in your repository.
 - **No Database**: No server-side database required
 - **Client-Side Only**: Everything runs in the user's browser
+- **localStorage (Temporary)**: Links are also saved to your browser's localStorage for convenience, but only links in `links.json` are permanent and visible to all users.
+
+### New Workflow for Saving Links
+1. **Create a Smart Link**: Fill out the form and submit.
+2. **Copy the Generated JSON**: After creation, a JSON snippet will appear. Copy it.
+3. **Paste into `docs/links.json`**: Open (or create) the `docs/links.json` file in your repository and paste the JSON. Merge with existing links if needed.
+4. **Commit & Push**: Save and push your changes to GitHub.
+5. **Click "Load from links.json"**: On your site, click the "Load from links.json" button to view all saved links from the file.
+
+> **Note:** Only links in `links.json` are persistent and visible to all visitors. Links in your browser's localStorage are private and temporary.
 
 ### Smart Links
 - **URL Format**: `yoursite.com/link.html?id=linkid`
 - **Client-Side Routing**: JavaScript handles link resolution
-- **Analytics**: Click tracking stored in localStorage
+- **Analytics**: Click tracking stored in localStorage (not persistent)
 
 ### Compatibility
 - ✅ **All Modern Browsers**: Chrome, Firefox, Safari, Edge
@@ -83,9 +93,42 @@ This version has been completely rewritten to work as a **static website** that'
 - View creation dates and statistics
 
 ### 💾 Data Management
-- Export your links as JSON backup
-- Import links from backup files
-- All data stored locally in browser
+- After creating a link, copy the generated JSON and add it to `docs/links.json` for permanent storage
+- Click "Load from links.json" to view all saved links
+- Export your links as JSON backup (localStorage only)
+- Import links from backup files (localStorage only)
+- All data stored locally in browser unless added to `links.json`
+## 📝 Example `links.json` Format
+
+```json
+{
+   "abc12345": {
+      "id": "abc12345",
+      "title": "Song Title",
+      "artist": "Artist Name",
+      "platforms": {
+         "Spotify": "https://open.spotify.com/track/xyz",
+         "Apple Music": "https://music.apple.com/album/xyz"
+      },
+      "clicks": 0,
+      "created": "2025-09-21T12:34:56.789Z",
+      "platformClicks": {}
+   },
+   "def67890": {
+      "id": "def67890",
+      "title": "Another Song",
+      "artist": "Another Artist",
+      "platforms": {
+         "Spotify": "https://open.spotify.com/track/abc"
+      },
+      "clicks": 0,
+      "created": "2025-09-21T13:00:00.000Z",
+      "platformClicks": {}
+   }
+}
+```
+
+You can merge multiple generated JSON objects into a single `links.json` file as shown above.
 
 ### 🎨 User Interface
 - Clean, modern design
