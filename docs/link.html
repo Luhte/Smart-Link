@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Smart Link</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div id="linkContent" class="music-card">
+            <div id="loadingMessage">
+                <p>Loading smart link...</p>
+            </div>
+            <div id="notFoundMessage" class="hidden">
+                <h1>Link Not Found</h1>
+                <p>This smart link doesn't exist or has been removed.</p>
+                <a href="index.html" class="platform-btn">Create Your Own Smart Link</a>
+            </div>
+            <div id="linkDetails" class="hidden">
+                <h1 id="songTitle"></h1>
+                <h2 id="artistName"></h2>
+                <p>Choose your preferred music platform:</p>
+                <div id="platformsList" class="platforms">
+                    <!-- Platforms will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get link ID from URL parameters with validation
+        const urlParams = new URLSearchParams(window.location.search);
+        const rawLinkId = urlParams.get('id');
+        
+        // Validate and sanitize linkId
+        function validateLinkId(id) {
+            if (!id || typeof id !== 'string') return null;
+            // Only allow alphanumeric characters and hyphens (UUID format)
+            const sanitized = id.replace(/[^a-zA-Z0-9-]/g, '');
+            return sanitized.length > 0 && sanitized.length <= 50 ? sanitized : null;
+        }
+        
+        // Validate platform name
+        function validatePlatform(platform) {
+            if (!platform || typeof platform !== 'string') return null;
+            // Only allow letters, spaces, and common punctuation for platform names
+            const sanitized = platform.replace(/[^a-zA-Z0-9\s\-_\.]/g, '');
+            return sanitized.length > 0 && sanitized.length <= 50 ? sanitized : null;
+        }
+
+        const linkId = validateLinkId(rawLinkId);
+
+        function trackClick(linkId, platform) {
+            // Validate inputs before processing
+            const validLinkId = validateLinkId(linkId);
+            const validPlatform = validatePlatform(platform);
+            
+            if (!validLinkId || !validPlatform) {
+                console.error('Invalid linkId or platform for tracking');
+                return;
+            }
+            
+            // Track clicks in localStorage
+            const analytics = JSON.parse(localStorage.getItem('linkAnalytics') || '{}');
+            if (!analytics[validLinkId]) {
+                analytics[validLinkId] = { totalClicks: 0, platformClicks: {} };
+            }
+            analytics[validLinkId].totalClicks++;
+            analytics[validLinkId].platformClicks[validPlatform] = (analytics[validLinkId].platformClicks[validPlatform] || 0) + 1;
+            localStorage.setItem('linkAnalytics', JSON.stringify(analytics));
+
+            // Also update the main links data
+            const links = JSON.parse(localStorage.getItem('smartLinks') || '{}');
+            if (links[validLinkId]) {
+                links[validLinkId].clicks = analytics[validLinkId].totalClicks;
+                links[validLinkId].platformClicks = analytics[validLinkId].platformClicks;
+                localStorage.setItem('smartLinks', JSON.stringify(links));
+            }
+        }
+
+        function getPlatformIcon(platform) {
+            const icons = {
+                'Spotify': '🎵',
+                'Apple Music': '🍎',
+                'YouTube Music': '▶️',
+                'Amazon Music': '📦',
+                'Deezer': '🎶',
+                'Tidal': '🌊',
+                'SoundCloud': '☁️',
+                'Bandcamp': '🎸',
+                'iTunes': '🍎'
+            };
+            return icons[platform] || '🎵';
+        }
+
+        // HTML escaping function to prevent XSS
+        function escapeHtml(unsafe) {
+            if (typeof unsafe !== 'string') return unsafe;
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function loadLink() {
+            if (!linkId) {
+                showNotFound();
+                return;
+            }
+
+            const links = JSON.parse(localStorage.getItem('smartLinks') || '{}');
+            const link = links[linkId];
+
+            if (!link) {
+                showNotFound();
+                return;
+            }
+
+            // Update page title
+            document.getElementById('pageTitle').textContent = `${link.title} by ${link.artist}`;
+            
+            // Populate link details - using textContent to prevent XSS
+            document.getElementById('songTitle').textContent = link.title;
+            document.getElementById('artistName').textContent = `by ${link.artist}`;
+
+            // Create platform buttons
+            const platformsList = document.getElementById('platformsList');
+            platformsList.innerHTML = '';
+
+            Object.entries(link.platforms).forEach(([platform, url]) => {
+                // Validate platform name before use
+                const validPlatform = validatePlatform(platform);
+                if (!validPlatform) {
+                    console.error('Invalid platform name:', platform);
+                    return;
+                }
+                
+                const platformBtn = document.createElement('a');
+                platformBtn.href = escapeHtml(url); // Escape the URL
+                platformBtn.target = '_blank';
+                platformBtn.className = 'platform-btn';
+                
+                // Use addEventListener instead of onclick to prevent XSS
+                platformBtn.addEventListener('click', function(e) {
+                    trackClick(linkId, validPlatform);
+                });
+                
+                // Create icon span
+                const iconSpan = document.createElement('span');
+                iconSpan.className = 'platform-icon';
+                iconSpan.textContent = getPlatformIcon(validPlatform);
+                
+                // Create text node for platform name - using textContent is safe
+                const textNode = document.createTextNode(validPlatform);
+                
+                // Append elements safely
+                platformBtn.appendChild(iconSpan);
+                platformBtn.appendChild(textNode);
+                platformsList.appendChild(platformBtn);
+            });
+
+            // Track page view
+            trackClick(linkId, '_pageview');
+
+            // Show the link details
+            document.getElementById('loadingMessage').classList.add('hidden');
+            document.getElementById('linkDetails').classList.remove('hidden');
+        }
+
+        function showNotFound() {
+            document.getElementById('loadingMessage').classList.add('hidden');
+            document.getElementById('notFoundMessage').classList.remove('hidden');
+        }
+
+        // Load the link when page loads
+        document.addEventListener('DOMContentLoaded', loadLink);
+    </script>
+</body>
+</html>
